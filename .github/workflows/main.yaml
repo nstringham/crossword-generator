@@ -8,7 +8,6 @@ on:
 env:
   CARGO_TERM_VERBOSE: true
   CARGO_TERM_COLOR: always
-  RUSTFLAGS: "-D warnings"
 
 jobs:
   check:
@@ -33,8 +32,8 @@ jobs:
       - run: cargo fmt --check
 
   clippy:
-    name: clippy
+    name: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: cargo clippy
+      - run: cargo clippy -- -D warnings
