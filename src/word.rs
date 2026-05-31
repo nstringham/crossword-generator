@@ -1,4 +1,4 @@
-use std::{fmt::Display, str::FromStr};
+use std::{fmt::Display, ops::Deref, str::FromStr};
 
 use crate::letter::Letter;
 
@@ -7,6 +7,14 @@ pub struct Word {}
 
 impl<const N: usize> From<[Letter; N]> for Word {
     fn from(value: [Letter; N]) -> Self {
+        todo!()
+    }
+}
+
+impl Deref for Word {
+    type Target = [Letter];
+
+    fn deref(&self) -> &Self::Target {
         todo!()
     }
 }
@@ -45,6 +53,15 @@ mod tests {
     fn can_create_word_from_array() {
         let word = Word::from([Letter::H, Letter::E, Letter::L, Letter::L, Letter::O]);
         assert_eq!(word, "Hello");
+    }
+
+    #[test]
+    fn can_deref_word_to_slice() {
+        let word = Word::from([Letter::H, Letter::E, Letter::L, Letter::L, Letter::O]);
+        assert_eq!(
+            &*word,
+            &[Letter::H, Letter::E, Letter::L, Letter::L, Letter::O]
+        );
     }
 
     #[test]
