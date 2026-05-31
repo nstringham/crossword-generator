@@ -91,7 +91,6 @@ impl<T: Default> Grid<T> {
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
 
     #[test]
