@@ -71,6 +71,24 @@ impl<T, const WIDTH: usize, const HEIGHT: usize> PartialEq<[[T; WIDTH]; HEIGHT]>
     }
 }
 
+impl<T: Default> Grid<T> {
+    pub fn expand_left(&mut self, columns: usize) {
+        todo!();
+    }
+
+    pub fn expand_right(&mut self, columns: usize) {
+        todo!();
+    }
+
+    pub fn expand_top(&mut self, rows: usize) {
+        todo!();
+    }
+
+    pub fn expand_bottom(&mut self, rows: usize) {
+        todo!();
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -150,5 +168,24 @@ mod tests {
         assert_eq!(row_iter.next(), None);
 
         assert_eq!(grid_iter.next(), None);
+    }
+
+    #[test]
+    fn grid_can_be_expanded() {
+        let mut grid: Grid<u8> = [[1, 2, 3], [4, 5, 6]].into();
+        grid.expand_left(4);
+        grid.expand_right(3);
+        grid.expand_top(2);
+        grid.expand_bottom(1);
+        assert_eq!(
+            grid,
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 2, 3, 0, 0, 0],
+                [0, 0, 0, 0, 4, 5, 6, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ]
+        );
     }
 }
