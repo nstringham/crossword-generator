@@ -1,3 +1,5 @@
+pub mod iter;
+
 use std::ops::{Index, IndexMut};
 
 #[derive(Debug, PartialEq, Eq, Clone)]
@@ -17,6 +19,14 @@ impl<T> Grid<T> {
     }
 
     pub fn height(&self) -> usize {
+        todo!();
+    }
+
+    pub fn iter(&self) -> iter::Iter<'_, T> {
+        todo!();
+    }
+
+    pub fn iter_mut(&mut self) -> iter::IterMut<'_, T> {
         todo!();
     }
 }
@@ -96,5 +106,49 @@ mod tests {
         assert_eq!(grid.width(), 3);
         assert_eq!(grid.height(), 2);
         assert_eq!(grid, array);
+    }
+
+    #[test]
+    fn gird_can_be_iterated_over() {
+        let grid: Grid<u8> = [[1, 2, 3], [4, 5, 6]].into();
+        let mut grid_iter = grid.iter();
+
+        let row = grid_iter.next().unwrap();
+        let mut row_iter = row.iter();
+        assert_eq!(row_iter.next(), Some(&1));
+        assert_eq!(row_iter.next(), Some(&2));
+        assert_eq!(row_iter.next(), Some(&3));
+        assert_eq!(row_iter.next(), None);
+
+        let row = grid_iter.next().unwrap();
+        let mut row_iter = row.iter();
+        assert_eq!(row_iter.next(), Some(&4));
+        assert_eq!(row_iter.next(), Some(&5));
+        assert_eq!(row_iter.next(), Some(&6));
+        assert_eq!(row_iter.next(), None);
+
+        assert_eq!(grid_iter.next(), None);
+    }
+
+    #[test]
+    fn gird_can_be_mutably_iterated_over() {
+        let mut grid: Grid<u8> = [[1, 2, 3], [4, 5, 6]].into();
+        let mut grid_iter = grid.iter_mut();
+
+        let row = grid_iter.next().unwrap();
+        let mut row_iter = row.iter_mut();
+        assert_eq!(row_iter.next(), Some(&mut 1));
+        assert_eq!(row_iter.next(), Some(&mut 2));
+        assert_eq!(row_iter.next(), Some(&mut 3));
+        assert_eq!(row_iter.next(), None);
+
+        let row = grid_iter.next().unwrap();
+        let mut row_iter = row.iter_mut();
+        assert_eq!(row_iter.next(), Some(&mut 4));
+        assert_eq!(row_iter.next(), Some(&mut 5));
+        assert_eq!(row_iter.next(), Some(&mut 6));
+        assert_eq!(row_iter.next(), None);
+
+        assert_eq!(grid_iter.next(), None);
     }
 }
