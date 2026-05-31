@@ -55,7 +55,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn parse_letter() {
+    fn letter_can_be_parsed_from_char() {
         assert_eq!(Letter::try_from('A'), Ok(Letter::A));
         assert_eq!(Letter::try_from('Z'), Ok(Letter::Z));
         assert_eq!(Letter::try_from('a'), Ok(Letter::A));
@@ -65,7 +65,7 @@ mod tests {
     }
 
     #[test]
-    fn to_string() {
+    fn letter_can_be_converted_to_string() {
         assert_eq!(Letter::A.to_string(), "A");
         assert_eq!(Letter::Z.to_string(), "Z");
     }
