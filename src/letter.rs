@@ -65,6 +65,12 @@ mod tests {
     }
 
     #[test]
+    fn letter_can_be_converted_to_char() {
+        assert_eq!(char::from(Letter::A), 'A');
+        assert_eq!(char::from(Letter::Z), 'Z');
+    }
+
+    #[test]
     fn letter_can_be_converted_to_string() {
         assert_eq!(Letter::A.to_string(), "A");
         assert_eq!(Letter::Z.to_string(), "Z");
