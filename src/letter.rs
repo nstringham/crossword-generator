@@ -55,6 +55,19 @@ mod tests {
     use super::*;
 
     #[test]
+    fn letter_is_one_byte() {
+        assert_eq!(std::mem::size_of::<Letter>(), 1);
+    }
+
+    #[test]
+    fn letter_can_use_niche_optimization() {
+        assert_eq!(
+            std::mem::size_of::<Option<Letter>>(),
+            std::mem::size_of::<Letter>()
+        );
+    }
+
+    #[test]
     fn letter_can_be_parsed_from_char() {
         assert_eq!(Letter::try_from('A'), Ok(Letter::A));
         assert_eq!(Letter::try_from('Z'), Ok(Letter::Z));
