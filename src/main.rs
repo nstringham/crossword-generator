@@ -1,3 +1,4 @@
+mod grid;
 mod letter;
 
 fn main() {
