@@ -126,7 +126,7 @@ mod tests {
     }
 
     #[test]
-    fn gird_can_be_iterated_over() {
+    fn grid_can_be_iterated_over() {
         let grid: Grid<u8> = [[1, 2, 3], [4, 5, 6]].into();
         let mut grid_iter = grid.iter();
 
@@ -148,7 +148,7 @@ mod tests {
     }
 
     #[test]
-    fn gird_can_be_mutably_iterated_over() {
+    fn grid_can_be_mutably_iterated_over() {
         let mut grid: Grid<u8> = [[1, 2, 3], [4, 5, 6]].into();
         let mut grid_iter = grid.iter_mut();
 
