@@ -2,6 +2,8 @@ pub mod iter;
 
 use std::ops::{Index, IndexMut};
 
+use crate::letter::Letter;
+
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Grid<T> {
     phantom: std::marker::PhantomData<T>,
@@ -71,6 +73,18 @@ impl<T, const WIDTH: usize, const HEIGHT: usize> PartialEq<[[T; WIDTH]; HEIGHT]>
     }
 }
 
+impl<const HEIGHT: usize> From<[&'static str; HEIGHT]> for Grid<Option<Letter>> {
+    fn from(value: [&'static str; HEIGHT]) -> Self {
+        todo!()
+    }
+}
+
+impl<const HEIGHT: usize> PartialEq<[&'static str; HEIGHT]> for Grid<Option<Letter>> {
+    fn eq(&self, other: &[&'static str; HEIGHT]) -> bool {
+        todo!()
+    }
+}
+
 impl<T: Default> Grid<T> {
     pub fn expand_left(&mut self, columns: usize) {
         todo!();
@@ -123,6 +137,25 @@ mod tests {
         assert_eq!(grid.width(), 3);
         assert_eq!(grid.height(), 2);
         assert_eq!(grid, array);
+    }
+
+    #[test]
+    fn grid_can_be_created_from_str_array() {
+        let grid: Grid<Option<Letter>> = ["ABC", "deg", "G 1"].into();
+        assert_eq!(
+            grid,
+            [
+                [Some(Letter::A), Some(Letter::B), Some(Letter::C)],
+                [Some(Letter::D), Some(Letter::E), Some(Letter::F)],
+                [Some(Letter::G), None, None]
+            ]
+        );
+    }
+
+    #[test]
+    fn grid_can_be_compared_to_str_array() {
+        let grid: Grid<Option<Letter>> = ["ABC", "DEF", "G 1"].into();
+        assert_eq!(grid, ["ABC", "DEF", "G 1"]);
     }
 
     #[test]

@@ -33,6 +33,12 @@ impl FromStr for Word {
     }
 }
 
+impl From<&'static str> for Word {
+    fn from(value: &'static str) -> Self {
+        todo!()
+    }
+}
+
 impl Display for Word {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         todo!()
@@ -80,6 +86,12 @@ mod tests {
     #[test]
     fn invalid_str_fails_to_parse() {
         assert_eq!("Invalid Word".parse::<Word>(), Err(()));
+    }
+
+    #[test]
+    fn can_create_word_from_static_str() {
+        let word = Word::from("Hello");
+        assert_eq!(word, "Hello");
     }
 
     #[test]
