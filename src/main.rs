@@ -1,3 +1,4 @@
+mod crossword;
 mod grid;
 mod letter;
 mod word;
