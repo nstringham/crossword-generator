@@ -86,20 +86,13 @@ impl<const HEIGHT: usize> PartialEq<[&'static str; HEIGHT]> for Grid<Option<Lett
 }
 
 impl<T: Default> Grid<T> {
-    pub fn expand_left(&mut self, columns: usize) {
-        todo!();
-    }
-
-    pub fn expand_right(&mut self, columns: usize) {
-        todo!();
-    }
-
-    pub fn expand_top(&mut self, rows: usize) {
-        todo!();
-    }
-
-    pub fn expand_bottom(&mut self, rows: usize) {
-        todo!();
+    pub fn expand(&mut self, left: usize, top: usize, right: usize, bottom: usize) {
+        match (left, top, right, bottom) {
+            (0, 0, 0, 0) => todo!(),
+            (0, 0, 0, bottom) => todo!(),
+            (0, top, 0, bottom) => todo!(),
+            (left, top, right, bottom) => todo!(),
+        }
     }
 }
 
@@ -203,12 +196,9 @@ mod tests {
     }
 
     #[test]
-    fn grid_can_be_expanded() {
+    fn grid_can_be_expanded_in_all_directions() {
         let mut grid: Grid<u8> = [[1, 2, 3], [4, 5, 6]].into();
-        grid.expand_left(4);
-        grid.expand_right(3);
-        grid.expand_top(2);
-        grid.expand_bottom(1);
+        grid.expand(4, 2, 3, 1);
         assert_eq!(
             grid,
             [
@@ -219,5 +209,44 @@ mod tests {
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             ]
         );
+    }
+
+    #[test]
+    fn grid_can_be_expanded_horizontally() {
+        let mut grid: Grid<u8> = [[1, 2, 3], [4, 5, 6]].into();
+        grid.expand(2, 0, 3, 0);
+        assert_eq!(grid, [[0, 0, 1, 2, 3, 0, 0, 0], [0, 0, 4, 5, 6, 0, 0, 0],]);
+    }
+
+    #[test]
+    fn grid_can_be_expanded_vertically() {
+        let mut grid: Grid<u8> = [[1, 2, 3], [4, 5, 6]].into();
+        grid.expand(0, 2, 0, 3);
+        assert_eq!(
+            grid,
+            [
+                [0, 0, 0],
+                [0, 0, 0],
+                [1, 2, 3],
+                [4, 5, 6],
+                [0, 0, 0],
+                [0, 0, 0],
+                [0, 0, 0],
+            ]
+        );
+    }
+
+    #[test]
+    fn grid_can_be_expanded_with_zeroes() {
+        let mut grid: Grid<u8> = [[1, 2, 3], [4, 5, 6]].into();
+        grid.expand(0, 0, 0, 0);
+        assert_eq!(grid, [[1, 2, 3], [4, 5, 6]]);
+    }
+
+    #[test]
+    fn grid_can_be_expanded_bottom_only() {
+        let mut grid: Grid<u8> = [[1, 2, 3], [4, 5, 6]].into();
+        grid.expand(0, 0, 0, 2);
+        assert_eq!(grid, [[1, 2, 3], [4, 5, 6], [0, 0, 0], [0, 0, 0],]);
     }
 }

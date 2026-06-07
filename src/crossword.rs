@@ -1,3 +1,5 @@
+use std::cmp::min;
+
 use crate::{grid::Grid, letter::Letter, word::Word};
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
@@ -35,6 +37,18 @@ impl Crossword {
         direction: Direction,
         word: &Word,
     ) -> Result<(), ()> {
+        let (end_x, end_y) = match direction {
+            Direction::Across => (x + word.len() as isize, y),
+            Direction::Down => (x, y + word.len() as isize),
+        };
+
+        self.grid.expand(
+            min(0 - x, 0) as usize,
+            min(0 - y, 0) as usize,
+            min(self.grid.width() as isize - end_x, 0) as usize,
+            min(self.grid.height() as isize - end_y, 0) as usize,
+        );
+
         todo!()
     }
 }
