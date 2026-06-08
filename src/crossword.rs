@@ -1,4 +1,4 @@
-use std::cmp::min;
+use std::cmp::{max, min};
 
 use crate::{grid::Grid, letter::Letter, word::Word};
 
@@ -16,6 +16,15 @@ struct WordLocation {
     pub length: usize,
 }
 
+impl WordLocation {
+    pub fn positions(&self) -> impl Iterator<Item = (usize, usize)> {
+        (0..self.length).map(|i| match self.direction {
+            Direction::Across => (self.x + i, self.y),
+            Direction::Down => (self.x, self.y + i),
+        })
+    }
+}
+
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Crossword {
     words: Vec<WordLocation>,
@@ -30,6 +39,38 @@ impl Crossword {
         }
     }
 
+    fn expand_grid_to_fit_word(
+        &mut self,
+        x: isize,
+        y: isize,
+        direction: Direction,
+        length: usize,
+    ) -> WordLocation {
+        let (end_x, end_y) = match direction {
+            Direction::Across => (x + length as isize, y),
+            Direction::Down => (x, y + length as isize),
+        };
+
+        let left = min(0 - x, 0) as usize;
+        let top = min(0 - y, 0) as usize;
+        let right = min(self.grid.width() as isize - end_x, 0) as usize;
+        let bottom = min(self.grid.height() as isize - end_y, 0) as usize;
+
+        self.grid.expand(left, top, right, bottom);
+
+        for word in &mut self.words {
+            word.x += left;
+            word.y += top;
+        }
+
+        WordLocation {
+            x: max(x, 0) as usize,
+            y: max(y, 0) as usize,
+            direction,
+            length,
+        }
+    }
+
     pub fn try_place_word(
         &mut self,
         x: isize,
@@ -37,25 +78,51 @@ impl Crossword {
         direction: Direction,
         word: &Word,
     ) -> Result<(), ()> {
-        let (end_x, end_y) = match direction {
-            Direction::Across => (x + word.len() as isize, y),
-            Direction::Down => (x, y + word.len() as isize),
-        };
+        let location = self.expand_grid_to_fit_word(x, y, direction, word.len());
 
-        self.grid.expand(
-            min(0 - x, 0) as usize,
-            min(0 - y, 0) as usize,
-            min(self.grid.width() as isize - end_x, 0) as usize,
-            min(self.grid.height() as isize - end_y, 0) as usize,
-        );
+        for (position, &letter) in location.positions().zip(word.iter()) {
+            if matches!(self.grid[position], Some(existing_letter) if existing_letter != letter) {
+                return Err(());
+            }
+        }
 
-        todo!()
+        self.words.push(location);
+
+        for (position, &letter) in location.positions().zip(word.iter()) {
+            self.grid[position] = Some(letter);
+        }
+
+        Ok(())
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn can_iterate_over_horizontal_word_location_positions() {
+        let location = WordLocation {
+            x: 1,
+            y: 2,
+            direction: Direction::Across,
+            length: 3,
+        };
+        let positions: Vec<(usize, usize)> = location.positions().collect();
+        assert_eq!(positions, [(1, 2), (2, 2), (3, 2)]);
+    }
+
+    #[test]
+    fn can_iterate_over_vertical_word_location_positions() {
+        let location = WordLocation {
+            x: 1,
+            y: 2,
+            direction: Direction::Down,
+            length: 3,
+        };
+        let positions: Vec<(usize, usize)> = location.positions().collect();
+        assert_eq!(positions, [(1, 2), (1, 3), (1, 4)]);
+    }
 
     #[test]
     fn empty_crossword_can_be_created() {
